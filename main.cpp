@@ -6,7 +6,7 @@
 
 #include "cpu/base58check.hpp"
 #include "cpu/preload_index.hpp"
-#include "cuda/pipeline.hpp"
+#include "cpu/cpu_search.hpp"
 
 struct Options {
     std::string addresses;
@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
         std::cout << ", Start: " << opt.start_minikey;
     std::cout << "\n";
 
-    PipelineConfig cfg{opt.batch ? opt.batch : 1024, opt.streams, 2, opt.start_minikey};
-    run_pipeline(cfg);
+    size_t matches = cpu_search(hashes, opt.start_minikey, opt.batch ? opt.batch : 1);
+    std::cout << "Total matches: " << matches << "\n";
     return 0;
 }

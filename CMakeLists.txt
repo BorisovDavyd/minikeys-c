@@ -13,6 +13,8 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3 --use_fast_math")
 add_library(cpu
     src/cpu/base58check.cpp
     src/cpu/preload_index.cpp
+    src/cpu/secp256k1_openssl.cpp
+    src/cpu/cpu_search.cpp
 )
 
 add_library(cuda
@@ -30,7 +32,10 @@ target_include_directories(cuda PUBLIC src)
 
 add_executable(minikey-research main.cpp)
 
-target_link_libraries(minikey-research PRIVATE cpu cuda)
+find_package(OpenSSL REQUIRED)
+target_link_libraries(cpu PUBLIC OpenSSL::Crypto)
+
+target_link_libraries(minikey-research PRIVATE cpu)
 
 enable_testing()
 add_executable(test_hashes tests/test_hashes.cu)
@@ -40,3 +45,7 @@ add_test(NAME hashes COMMAND test_hashes)
 add_executable(test_pipeline tests/test_pipeline.cu)
 target_link_libraries(test_pipeline PRIVATE cpu cuda)
 add_test(NAME pipeline COMMAND test_pipeline)
+
+add_executable(test_minikey tests/test_minikey.cpp)
+target_link_libraries(test_minikey PRIVATE cpu)
+add_test(NAME minikey COMMAND test_minikey)
