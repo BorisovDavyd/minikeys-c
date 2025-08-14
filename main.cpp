@@ -82,6 +82,7 @@ int main(int argc, char** argv) {
         cfg.start_minikey = opt.start_minikey;
         cfg.hashes = d_hashes;
         cfg.hash_count = hashes.size();
+        cfg.hashes_host = &hashes;
         run_pipeline(cfg);
         cudaFree(d_hashes);
     } else {
