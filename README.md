@@ -45,6 +45,7 @@ P2PKH addresses (each starting with `1`):
 | `--index <cuckoo|bloom>` | Select GPU index type (default: `cuckoo`). |
 | `--mode <random|mixed>` | Mini-key generation mode (default: `random`). |
 | `--seq-steps <N>` | Step size for `mixed` mode sequences. |
+| `-S, --start <minikey>` | Begin linear search from the provided mini-key. |
 | `--batch <N>` | Keys processed per GPU batch. |
 | `--streams <N>` | Number of CUDA streams to overlap pipeline stages. |
 | `--report-interval <N>` | Print progress every N batches. |
@@ -66,6 +67,12 @@ size, overlapping stages with two CUDA streams:
 ```bash
 ./minikey-research --addresses addresses.txt --mode mixed --seq-steps 12121212 \
   --batch 3000000 --streams 2 --report-interval 1
+```
+
+Walk sequentially starting from a specific mini-key:
+
+```bash
+./minikey-research --addresses addresses.txt -S SABC1ExampleStartKey --batch 1000000
 ```
 
 To experiment with an alternative Bloom filter index sized for 64 million

@@ -13,6 +13,7 @@ struct Options {
     std::string index = "cuckoo";
     std::string mode = "random";
     uint64_t seq_steps = 0;
+    std::string start_minikey;
     uint64_t batch = 0;
     int streams = 1;
     uint64_t report_interval = 100;
@@ -31,6 +32,9 @@ Options parse_args(int argc, char** argv) {
             opt.mode = argv[++i];
         } else if (arg == "--seq-steps" && i + 1 < argc) {
             opt.seq_steps = std::stoull(argv[++i]);
+        } else if ((arg == "-S" || arg == "--start") && i + 1 < argc) {
+            opt.start_minikey = argv[++i];
+            opt.mode = "sequential";
         } else if (arg == "--batch" && i + 1 < argc) {
             opt.batch = std::stoull(argv[++i]);
         } else if (arg == "--streams" && i + 1 < argc) {
@@ -63,9 +67,12 @@ int main(int argc, char** argv) {
               << ", Batch: " << opt.batch
               << ", Streams: " << opt.streams
               << ", Report interval: " << opt.report_interval
-              << ", GPU: " << opt.gpu << "\n";
+              << ", GPU: " << opt.gpu;
+    if(!opt.start_minikey.empty())
+        std::cout << ", Start: " << opt.start_minikey;
+    std::cout << "\n";
 
-    PipelineConfig cfg{opt.batch ? opt.batch : 1024, opt.streams, 2};
+    PipelineConfig cfg{opt.batch ? opt.batch : 1024, opt.streams, 2, opt.start_minikey};
     run_pipeline(cfg);
     return 0;
 }
