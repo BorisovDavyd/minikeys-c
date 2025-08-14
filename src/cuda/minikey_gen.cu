@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-__device__ __constant__ char kAlphabet[58] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+__device__ __constant__ char kAlphabet[59] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
 extern "C" __global__ void minikey_gen(char* out, size_t count, const uint8_t* start, unsigned long long base){
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
