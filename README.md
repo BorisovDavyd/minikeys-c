@@ -49,7 +49,7 @@ P2PKH addresses (each starting with `1`):
 | `--batch <N>` | Keys processed per GPU batch. |
 | `--streams <N>` | Number of CUDA streams to overlap pipeline stages. |
 | `--report-interval <N>` | Print progress every N batches. |
-| `--gpu <id>` | GPU device to use (default: 0). |
+| `--gpu <id>` | GPU device to use (default: 0, set to -1 for CPU search). |
 
 ### Examples
 

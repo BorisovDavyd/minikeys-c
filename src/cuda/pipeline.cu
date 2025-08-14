@@ -16,7 +16,7 @@
 } while(0)
 
 extern "C" __global__ void minikey_gen(char* out, size_t count, const uint8_t* start, unsigned long long base);
-extern "C" __global__ void cuckoo_lookup(const uint8_t* h160, size_t count, uint8_t* results);
+extern "C" __global__ void cuckoo_lookup(const uint8_t* h160, size_t count, const uint8_t* table, size_t table_count, uint8_t* results);
 
 __global__ void hash160_from_minikey(const char* keys, uint8_t* h160, size_t count){
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -75,7 +75,7 @@ void run_pipeline(const PipelineConfig& cfg){
         cudaStream_t s = streams[it % cfg.streams];
         minikey_gen<<<grid,block,0,s>>>(buf[b].keys,cfg.batch,d_start,base);
         hash160_from_minikey<<<grid,block,0,s>>>(buf[b].keys,buf[b].h160,cfg.batch);
-        cuckoo_lookup<<<grid,block,0,s>>>(buf[b].h160,cfg.batch,buf[b].matches);
+        cuckoo_lookup<<<grid,block,0,s>>>(buf[b].h160,cfg.batch,cfg.hashes,cfg.hash_count,buf[b].matches);
         CUDA_CHECK(cudaMemcpyAsync(buf[b].host_matches,buf[b].matches,res_bytes,cudaMemcpyDeviceToHost,s));
         CUDA_CHECK(cudaEventRecord(buf[b].ready,s));
         base += cfg.batch;

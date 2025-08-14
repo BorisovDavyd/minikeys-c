@@ -7,6 +7,8 @@
 #include "cpu/base58check.hpp"
 #include "cpu/preload_index.hpp"
 #include "cpu/cpu_search.hpp"
+#include "cuda/pipeline.hpp"
+#include <cuda_runtime.h>
 
 struct Options {
     std::string addresses;
@@ -60,7 +62,7 @@ int main(int argc, char** argv) {
 
     auto hashes = load_hash160(opt.addresses);
     std::cout << "Loaded " << hashes.size() << " addresses\n";
-    preload_index(hashes);
+    uint8_t* d_hashes = preload_index(hashes);
 
     std::cout << "Mode: " << opt.mode
               << ", Index: " << opt.index
@@ -71,8 +73,20 @@ int main(int argc, char** argv) {
     if(!opt.start_minikey.empty())
         std::cout << ", Start: " << opt.start_minikey;
     std::cout << "\n";
-
-    size_t matches = cpu_search(hashes, opt.start_minikey, opt.batch ? opt.batch : 1);
-    std::cout << "Total matches: " << matches << "\n";
+    if(opt.gpu>=0){
+        cudaSetDevice(opt.gpu);
+        PipelineConfig cfg;
+        cfg.batch = opt.batch;
+        cfg.streams = opt.streams;
+        cfg.iterations = 1;
+        cfg.start_minikey = opt.start_minikey;
+        cfg.hashes = d_hashes;
+        cfg.hash_count = hashes.size();
+        run_pipeline(cfg);
+        cudaFree(d_hashes);
+    } else {
+        size_t matches = cpu_search(hashes, opt.start_minikey, opt.batch ? opt.batch : 1);
+        std::cout << "Total matches: " << matches << "\n";
+    }
     return 0;
 }
