@@ -36,3 +36,7 @@ enable_testing()
 add_executable(test_hashes tests/test_hashes.cu)
 target_link_libraries(test_hashes PRIVATE cpu cuda)
 add_test(NAME hashes COMMAND test_hashes)
+
+add_executable(test_pipeline tests/test_pipeline.cu)
+target_link_libraries(test_pipeline PRIVATE cpu cuda)
+add_test(NAME pipeline COMMAND test_pipeline)

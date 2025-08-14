@@ -6,6 +6,7 @@
 
 #include "cpu/base58check.hpp"
 #include "cpu/preload_index.hpp"
+#include "cuda/pipeline.hpp"
 
 struct Options {
     std::string addresses;
@@ -57,13 +58,14 @@ int main(int argc, char** argv) {
     std::cout << "Loaded " << hashes.size() << " addresses\n";
     preload_index(hashes);
 
-    // At this stage, the GPU pipeline is not implemented; we simply echo options
     std::cout << "Mode: " << opt.mode
               << ", Index: " << opt.index
               << ", Batch: " << opt.batch
               << ", Streams: " << opt.streams
               << ", Report interval: " << opt.report_interval
               << ", GPU: " << opt.gpu << "\n";
-    std::cout << "GPU pipeline not yet implemented.\n";
+
+    PipelineConfig cfg{opt.batch ? opt.batch : 1024, opt.streams, 2};
+    run_pipeline(cfg);
     return 0;
 }
