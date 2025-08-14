@@ -18,13 +18,9 @@ struct SHA256Ctx {
     int datalen;
 };
 
-HD void sha256_init(SHA256Ctx *ctx);
-HD void sha256_update(SHA256Ctx *ctx, const uint8_t *data, size_t len);
-HD void sha256_final(SHA256Ctx *ctx, uint8_t hash[32]);
-
 static HD uint32_t rotr(uint32_t x, uint32_t n){return (x>>n)|(x<<(32-n));}
 
-static HD void sha256_transform(SHA256Ctx *ctx){
+static HD inline void sha256_transform(SHA256Ctx *ctx){
     const uint32_t k[64] = {
         0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
         0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
@@ -59,14 +55,14 @@ static HD void sha256_transform(SHA256Ctx *ctx){
     ctx->state[4]+=e;ctx->state[5]+=f;ctx->state[6]+=g;ctx->state[7]+=h;
 }
 
-HD void sha256_init(SHA256Ctx *ctx){
+static HD inline void sha256_init(SHA256Ctx *ctx){
     ctx->datalen = 0;
     ctx->bitlen = 0;
     ctx->state[0]=0x6a09e667;ctx->state[1]=0xbb67ae85;ctx->state[2]=0x3c6ef372;ctx->state[3]=0xa54ff53a;
     ctx->state[4]=0x510e527f;ctx->state[5]=0x9b05688c;ctx->state[6]=0x1f83d9ab;ctx->state[7]=0x5be0cd19;
 }
 
-HD void sha256_update(SHA256Ctx *ctx, const uint8_t *data, size_t len){
+static HD inline void sha256_update(SHA256Ctx *ctx, const uint8_t *data, size_t len){
     for(size_t i=0;i<len;++i){
         ctx->data[ctx->datalen++] = data[i];
         if(ctx->datalen==64){
@@ -77,7 +73,7 @@ HD void sha256_update(SHA256Ctx *ctx, const uint8_t *data, size_t len){
     }
 }
 
-HD void sha256_final(SHA256Ctx *ctx, uint8_t hash[32]){
+static HD inline void sha256_final(SHA256Ctx *ctx, uint8_t hash[32]){
     uint32_t i = ctx->datalen;
     if(ctx->datalen < 56){
         ctx->data[i++] = 0x80;

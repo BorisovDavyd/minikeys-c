@@ -18,13 +18,9 @@ struct RIPEMD160Ctx {
     uint32_t buflen;
 };
 
-HD void ripemd160_init(RIPEMD160Ctx* ctx);
-HD void ripemd160_update(RIPEMD160Ctx* ctx, const uint8_t* data, size_t len);
-HD void ripemd160_final(RIPEMD160Ctx* ctx, uint8_t hash[20]);
-
 static HD uint32_t rol(uint32_t x, uint32_t n){return (x<<n)|(x>>(32-n));}
 
-HD void ripemd160_transform(RIPEMD160Ctx* ctx, const uint8_t block[64]){
+static HD inline void ripemd160_transform(RIPEMD160Ctx* ctx, const uint8_t block[64]){
     const uint32_t K[5] = {0x00000000,0x5A827999,0x6ED9EBA1,0x8F1BBCDC,0xA953FD4E};
     const uint32_t KK[5]= {0x50A28BE6,0x5C4DD124,0x6D703EF3,0x7A6D76E9,0x00000000};
     const uint32_t r[80] = {
@@ -75,12 +71,12 @@ HD void ripemd160_transform(RIPEMD160Ctx* ctx, const uint8_t block[64]){
     ctx->h[0] = tmp;
 }
 
-HD void ripemd160_init(RIPEMD160Ctx* ctx){
+static HD inline void ripemd160_init(RIPEMD160Ctx* ctx){
     ctx->h[0]=0x67452301;ctx->h[1]=0xefcdab89;ctx->h[2]=0x98badcfe;ctx->h[3]=0x10325476;ctx->h[4]=0xc3d2e1f0;
     ctx->bitlen=0;ctx->buflen=0;
 }
 
-HD void ripemd160_update(RIPEMD160Ctx* ctx, const uint8_t* data, size_t len){
+static HD inline void ripemd160_update(RIPEMD160Ctx* ctx, const uint8_t* data, size_t len){
     for(size_t i=0;i<len;i++){
         ctx->buf[ctx->buflen++] = data[i];
         if(ctx->buflen==64){
@@ -91,7 +87,7 @@ HD void ripemd160_update(RIPEMD160Ctx* ctx, const uint8_t* data, size_t len){
     }
 }
 
-HD void ripemd160_final(RIPEMD160Ctx* ctx, uint8_t hash[20]){
+static HD inline void ripemd160_final(RIPEMD160Ctx* ctx, uint8_t hash[20]){
     uint32_t i = ctx->buflen;
     ctx->buf[i++] = 0x80;
     if(i>56){
