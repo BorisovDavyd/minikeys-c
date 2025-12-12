@@ -6,15 +6,19 @@ from app.utils.logging import logger
 
 
 class CloudRUClient:
-    """Wrapper around Cloud.ru Evolution Foundation Model API.
+    """Wrapper around Cloud.ru Foundation Models (OpenAI-compatible) API.
 
     When MOCK_LLM env var is set to a truthy value, deterministic stub responses are
     returned to keep the system working offline.
     """
 
-    def __init__(self, base_url: str | None = None, api_key: str | None = None):
-        self.base_url = base_url or os.getenv("CLOUDRU_BASE_URL", "https://api.cloud.ru/llm")
+    def __init__(self, base_url: str | None = None, api_key: str | None = None, model: str | None = None):
+        # Foundation Models OpenAI-compatible endpoint
+        self.base_url = base_url or os.getenv(
+            "CLOUDRU_BASE_URL", "https://foundation-models.api.cloud.ru"
+        )
         self.api_key = api_key or os.getenv("CLOUDRU_API_KEY")
+        self.model = model or os.getenv("CLOUDRU_MODEL", "gpt-4o-mini")
         self.mock = bool(os.getenv("MOCK_LLM", "1")) if api_key is None else False
 
     async def generate(self, prompt: str) -> str:
@@ -27,13 +31,20 @@ class CloudRUClient:
         async with httpx.AsyncClient(timeout=10) as client:
             try:
                 response = await client.post(
-                    f"{self.base_url}/v1/generate",
-                    json={"prompt": prompt},
+                    f"{self.base_url}/v1/chat/completions",
+                    json={
+                        "model": self.model,
+                        "messages": [{"role": "user", "content": prompt}],
+                        "temperature": 0,
+                    },
                     headers=headers,
                 )
                 response.raise_for_status()
                 data = response.json()
-                return data.get("text", "")
+                choices = data.get("choices", [])
+                if not choices:
+                    return ""
+                return choices[0].get("message", {}).get("content", "")
             except httpx.HTTPError as exc:
                 logger.error("LLM request failed: %s", exc)
                 raise

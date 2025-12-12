@@ -26,11 +26,15 @@ npm install
 ```
 
 ## Environment Variables
-- `CLOUDRU_API_KEY` / `CLOUDRU_BASE_URL` – Cloud.ru Evolution API (if not using mock)
+- `CLOUDRU_API_KEY` / `CLOUDRU_BASE_URL` – Cloud.ru Foundation Models OpenAI-compatible API key and optional base URL (default `https://foundation-models.api.cloud.ru`)
+- `CLOUDRU_MODEL` – model id for Foundation Models (default `gpt-4o-mini`)
 - `MOCK_LLM` – set to `1` (default) to use deterministic stub
 - `GITLAB_TOKEN`, `GITLAB_BASE_URL` – enable GitLab integration
 - `UI_BASE_URL`, `API_BASE_URL`, `userPlaneApiToken` – used by generated tests
 - `VITE_BACKEND_URL` – frontend backend URL
+
+### Which API key is required?
+Use an API key from the **Cloud.ru Foundation Models** service (OpenAI-compatible endpoint described at https://cloud.ru/docs/foundation-models/ug/topics/api-ref). Other service keys (monitoring, audit, notifications, logging, etc.) will not work for LLM generation.
 
 ## Running (dev)
 Backend:
