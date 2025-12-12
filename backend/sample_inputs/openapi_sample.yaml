@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: Evolution Compute API
+  version: 1.0.0
+paths:
+  /vms:
+    get:
+      summary: List VMs
+      operationId: list_vms
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create VM
+      operationId: create_vm
+      responses:
+        '201':
+          description: Created
+  /vms/{id}:
+    get:
+      summary: Get VM
+      operationId: get_vm
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update VM
+      operationId: update_vm
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete VM
+      operationId: delete_vm
+      responses:
+        '204':
+          description: Deleted
+  /vms/{id}/status:
+    post:
+      summary: Change VM status
+      operationId: change_status
+      responses:
+        '202':
+          description: Accepted
+  /disks:
+    get:
+      summary: List disks
+      operationId: list_disks
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create disk
+      operationId: create_disk
+      responses:
+        '201':
+          description: Created
+  /disks/{id}:
+    get:
+      summary: Get disk
+      operationId: get_disk
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update disk
+      operationId: update_disk
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete disk
+      operationId: delete_disk
+      responses:
+        '204':
+          description: Deleted
+  /disks/{id}/attach:
+    post:
+      summary: Attach disk
+      operationId: attach_disk
+      responses:
+        '200':
+          description: Attached
+  /disks/{id}/detach:
+    post:
+      summary: Detach disk
+      operationId: detach_disk
+      responses:
+        '200':
+          description: Detached
+  /flavors:
+    get:
+      summary: List flavors
+      operationId: list_flavors
+      responses:
+        '200':
+          description: OK
+  /flavors/{id}:
+    get:
+      summary: Get flavor
+      operationId: get_flavor
+      responses:
+        '200':
+          description: OK
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
