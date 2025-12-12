@@ -100,7 +100,7 @@ async def generate_auto_api(req: AutoApiGenerateRequest):
 @app.post("/api/validate")
 async def validate_manual(req: ValidateRequest):
     try:
-        report = validator.validate(req.manual_tests, ruleset=req.ruleset)
+        report = await validator.validate(req.manual_tests, ruleset=req.ruleset)
         return {"report": report}
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
@@ -108,7 +108,7 @@ async def validate_manual(req: ValidateRequest):
 
 @app.post("/api/optimize")
 async def optimize(req: OptimizeRequest):
-    report = optimizer.optimize(
+    report = await optimizer.optimize(
         manual_tests=req.manual_tests,
         requirements_text=req.requirements_text,
         openapi_yaml=req.openapi_yaml,

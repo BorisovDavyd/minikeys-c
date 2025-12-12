@@ -6,8 +6,8 @@ Agentic system that generates Allure TestOps as Code manual tests, UI and API au
 - Manual test generation from UI requirements or OpenAPI (Allure decorators, AAA steps, 25+ cases)
 - Automated Playwright + pytest UI skeletons
 - Automated pytest API tests from OpenAPI
-- Validation of Allure structure
-- Optional optimizer (duplicate detection, plan suggestions)
+- Validation of Allure structure (with Cloud.ru Evolution narrative feedback via the official client wrapper)
+- Optional optimizer (duplicate detection, plan suggestions) enriched by Cloud.ru Evolution feedback
 - Mock LLM mode by default
 
 ## Setup
