@@ -1,0 +1,5 @@
+- Landing page: text, “Add service” button, steps, total price “per month incl VAT”, disclaimer
+- Product catalog: categories, popular products, Free Tier, search/filter, selecting product goes to config
+- Compute config: CPU/RAM/disk/region/tariff, ranges not free input, dynamic price, tooltips, dependent fields, max 99 instances, etc.
+- Config management: multiple services, delete, compare 2–3 configs, download PDF/JSON, share link, “Connect” button (except Arenadata DB), Free Tier only once
+- Mobile: responsive UI, price large, controls usable
