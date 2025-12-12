@@ -34,7 +34,15 @@ npm install
 - `VITE_BACKEND_URL` – frontend backend URL
 
 ### Which API key is required?
-Use an API key from the **Cloud.ru Foundation Models** service (OpenAI-compatible endpoint described at https://cloud.ru/docs/foundation-models/ug/topics/api-ref). Other service keys (monitoring, audit, notifications, logging, etc.) will not work for LLM generation.
+Use an API key from the **Cloud.ru Foundation Models** service (OpenAI-compatible endpoint described at https://cloud.ru/docs/foundation-models/ug/topics/api-ref). Other service keys (monitoring, audit, notifications, logging, AI Agents, etc.) will not work for LLM generation.
+
+To call the real model instead of the deterministic mock, set for example:
+```bash
+export CLOUDRU_API_KEY="<your_foundation_models_api_key>"
+export CLOUDRU_BASE_URL="https://foundation-models.api.cloud.ru"  # default
+export CLOUDRU_MODEL="gpt-4o-mini"  # or another available model id
+export MOCK_LLM=0
+```
 
 ## Running (dev)
 Backend:

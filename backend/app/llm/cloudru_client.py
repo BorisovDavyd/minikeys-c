@@ -9,7 +9,9 @@ class CloudRUClient:
     """Wrapper around Cloud.ru Foundation Models (OpenAI-compatible) API.
 
     When MOCK_LLM env var is set to a truthy value, deterministic stub responses are
-    returned to keep the system working offline.
+    returned to keep the system working offline. Real calls require an API key from
+    the *Foundation Models* service (other Cloud.ru services like monitoring or
+    notifications will not work here).
     """
 
     def __init__(self, base_url: str | None = None, api_key: str | None = None, model: str | None = None):
@@ -26,7 +28,9 @@ class CloudRUClient:
             logger.info("CloudRUClient running in mock mode")
             return self._mock_response(prompt)
         if not self.api_key:
-            raise RuntimeError("CLOUDRU_API_KEY is required when not in mock mode")
+            raise RuntimeError(
+                "CLOUDRU_API_KEY (from Cloud.ru Foundation Models service) is required when not in mock mode"
+            )
         headers = {"Authorization": f"Bearer {self.api_key}"}
         async with httpx.AsyncClient(timeout=10) as client:
             try:
